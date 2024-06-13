@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema(
   {
@@ -17,8 +17,6 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
-      min: 8,
     },
     image: {
       type: String,
@@ -29,6 +27,6 @@ const userSchema = new mongoose.Schema(
     },
   },
   { timestamps: true, timeseries: true }
-);
+)
 
-export const User = mongoose.models.User || mongoose.model("User", userSchema);
+export const User = mongoose?.models?.User || mongoose.model('User', userSchema)

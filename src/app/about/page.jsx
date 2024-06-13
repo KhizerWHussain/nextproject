@@ -2,6 +2,11 @@ import AboutImage from "../../../public/about.png";
 import CustomImage from "@/components/CustomImage";
 import styles from "./about.module.css";
 
+export const metadata = {
+  title: "About Page",
+  description: "about us kh creative thought agency",
+};
+
 const boxesArray = [
   {
     id: 1,

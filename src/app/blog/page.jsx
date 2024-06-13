@@ -1,47 +1,37 @@
 import PostCardComponent from "@/components/postcard";
 import styles from "./blog.module.css";
-import Image from "../../../public/noavatar.png";
-import { getPosts } from "@/lib/data";
+// import { getPosts } from "@/lib/data";
 
-const postsArray = [
-  {
-    id: 1,
-    title: "Title",
-    desc: "description",
-    date: "01.01.2024",
-    image: Image,
-  },
-  {
-    id: 2,
-    title: "Title",
-    desc: "description",
-    date: "01.01.2024",
-    image: Image,
-  },
-  {
-    id: 3,
-    title: "Title",
-    desc: "description",
-    date: "01.01.2024",
-    image: Image,
-  },
-  {
-    id: 4,
-    title: "Title",
-    desc: "description",
-    date: "01.01.2024",
-    image: Image,
-  },
-];
+export const metadata = {
+  title: "Blog Page",
+  description: "creative thoughts agency",
+};
+
+const getAllPosts = async () => {
+  try {
+    const res = await fetch("http://localhost:3000/api/v1/blog", {
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) {
+      throw new Error("Something went wrong");
+    }
+    return res.json();
+  } catch (error) {
+    console.log("error =>", error);
+  }
+};
 
 const BlogPage = async () => {
-  const posts = await getPosts();
+  // fetch data with an api
+  const { data } = await getAllPosts();
+  // console.log(data);
 
-  console.log("posts => ", posts);
+  // fetch data without api
+  // const { data } = await getPosts();
 
-  return posts ? (
+  return data ? (
     <div className={styles.container}>
-      {posts?.map((item, i) => (
+      {data?.map((item, i) => (
         <div className={styles.post} key={`${i}.${item.id}`}>
           <PostCardComponent item={item} />
         </div>

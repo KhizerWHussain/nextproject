@@ -4,7 +4,8 @@ import CustomImage from "../CustomImage";
 import Link from "next/link";
 
 const PostCardComponent = ({ item }) => {
-  const { id, image, date, title, desc, slug } = item;
+  const { id, image, createdAt, title, desc, slug } = item;
+
   return (
     <div className={styles.container} key={id}>
       <div className={styles.top}>
@@ -20,7 +21,9 @@ const PostCardComponent = ({ item }) => {
             />
           </div>
         )}
-        <span className={styles.date}>{date}</span>
+        <span className={styles.date}>
+          {createdAt?.toString().slice(4, 16)}
+        </span>
       </div>
       <div className={styles.bottom}>
         <h1 className={styles.title}>{title}</h1>

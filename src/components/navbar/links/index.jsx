@@ -4,6 +4,8 @@ import styles from "./links.module.css";
 import NavLink from "./navlink";
 import CustomImage from "@/components/CustomImage";
 import MenuImage from "../../../../public/menu.png";
+import { handleLogout } from "@/lib/actions";
+import { auth } from "@/lib/auth";
 
 const linksArray = [
   {
@@ -28,11 +30,8 @@ const linksArray = [
   },
 ];
 
-const Links = () => {
+const Links = ({ session }) => {
   const [open, setOpen] = useState(false);
-
-  const session = true;
-  const isAdmin = true;
 
   return (
     <div className={styles.container}>
@@ -40,10 +39,12 @@ const Links = () => {
         {linksArray.map((link, index) => (
           <NavLink item={link} index={index} key={index} />
         ))}
-        {session ? (
+        {session?.user ? (
           <>
-            {isAdmin && <NavLink item={{ title: "Admin", path: "/admin" }} />}
-            <button className={styles.logout}>Logout</button>
+            {session?.user?.isAdmin && <NavLink item={{ title: "Admin", path: "/admin" }} />}
+            <form action={handleLogout}>
+              <button className={styles.logout}>Logout</button>
+            </form>
           </>
         ) : (
           <NavLink item={{ title: "Login", path: "/login" }} />

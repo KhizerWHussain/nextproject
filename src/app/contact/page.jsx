@@ -2,6 +2,11 @@ import CustomImage from "@/components/CustomImage";
 import styles from "./contact.module.css";
 import ContactImage from "../../../public/contact.png";
 
+export const metadata = {
+  title: "Contact Page",
+  description: "for contacting the site",
+};
+
 const Contact = () => {
   return (
     <div className={styles.container}>

@@ -1,13 +1,46 @@
 import CustomImage from "@/components/CustomImage";
 import styles from "./singlepost.module.css";
-import Image from "../../../../public/noavatar.png";
+import { getPost, getUser } from "@/lib/data";
 
-const SinglePostPage = () => {
+export const generateMetadata = async ({ params }) => {
+  const { slug } = params;
+
+  const { data } = await getPost(slug);
+  return {
+    title: data?.title,
+    description: data?.description,
+  };
+};
+
+const getSinglePost = async (slug) => {
+  try {
+    const res = await fetch(`http://localhost:3000/api/v1/blog/${slug}`, {
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) {
+      throw new Error("Something went wrong");
+    }
+    return res.json();
+  } catch (error) {
+    console.log("error =>", error);
+  }
+};
+
+const SinglePostPage = async ({ params }) => {
+  const { slug } = params;
+
+  const { data } = await getSinglePost(slug);
+
+  console.log(data);
+
+  // const { data } = await getPost(slug);
+  const user = await getUser(data.userId);
+
   const detailsArray = [
     {
       id: 1,
       title: "Author",
-      value: "Khizer Hussain",
+      value: user?.data?.username,
     },
     {
       id: 2,
@@ -17,10 +50,10 @@ const SinglePostPage = () => {
   ];
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} key={data?._id}>
       <div className={styles.imgContainer}>
         <CustomImage
-          image={Image}
+          image={data?.image}
           alt={"details"}
           fill
           priority={false}
@@ -30,13 +63,13 @@ const SinglePostPage = () => {
         />
       </div>
       <div className={styles.textContainer}>
-        <h1 className={styles.title}>Title</h1>
+        <h1 className={styles.title}>{data?.title}</h1>
         <div className={styles.detail}>
           <CustomImage
-            image={Image}
+            image={user?.data?.image}
             alt={"details"}
             priority={false}
-            unoptimized={false}
+            unoptimized={true}
             key={"detail"}
             className={styles.avatar}
             width={50}
@@ -49,15 +82,7 @@ const SinglePostPage = () => {
             </div>
           ))}
         </div>
-        <div className={styles.content}>
-          Nam eu nunc eu lectus accumsan feugiat nec a quam. Curabitur iaculis
-          elementum dui ac faucibus. In at tortor sed lacus mollis vestibulum id
-          quis sem. Quisque nec felis mauris. Integer auctor, nibh eu sodales
-          dictum, lectus arcu ultricies erat, vitae efficitur nunc felis et
-          odio. Aenean tincidunt fermentum nisl, ac placerat neque molestie in.
-          Morbi gravida metus at velit pulvinar, a feugiat ex dignissim. Fusce
-          laoreet sem vel arcu hendrerit
-        </div>
+        <div className={styles.content}>{data?.description}</div>
       </div>
     </div>
   );

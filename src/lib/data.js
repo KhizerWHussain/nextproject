@@ -1,6 +1,7 @@
 import { Post } from "@/models/postmodel";
 import { connectToDb } from "./utils";
 import { User } from "@/models/usermodel";
+import { unstable_noStore as noStore } from "next/cache";
 
 export const getPosts = async () => {
   connectToDb();
@@ -19,7 +20,7 @@ export const getPosts = async () => {
 export const getPost = async (slug) => {
   connectToDb();
   try {
-    const post = await Post.find({ slug });
+    const post = await Post.findOne({ slug });
     return {
       message: "Success",
       statusCode: 200,
@@ -31,6 +32,7 @@ export const getPost = async (slug) => {
 };
 
 export const getUser = async (id) => {
+  noStore();
   connectToDb();
   try {
     const user = await User.findById(id);
