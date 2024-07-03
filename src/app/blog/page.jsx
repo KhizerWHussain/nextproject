@@ -22,7 +22,7 @@ const getAllPosts = async () => {
 
 const BlogPage = async () => {
   // fetch data with an api
-  const { data } = await getAllPosts();
+  const posts = await getAllPosts();
   // console.log(data);
 
   // fetch data without api
@@ -30,8 +30,8 @@ const BlogPage = async () => {
 
   return (
     <div className={styles.container}>
-      {data &&
-        data?.map((item, i) => (
+      {posts &&
+        posts?.data?.map((item, i) => (
           <div className={styles.post} key={`${i}.${item.id}`}>
             <PostCardComponent item={item} />
           </div>

@@ -22,7 +22,7 @@ export const DELETE = async (req, { params }) => {
   connectToDb();
   const { slug } = params;
   try {
-    const post = await Post.deleteOne({ slug });
+    await Post.deleteOne({ slug });
     return NextResponse.json({
       message: "post has been deleted!",
       statusCode: 200,

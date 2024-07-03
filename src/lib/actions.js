@@ -92,12 +92,12 @@ export const deleteUser = async (formData) => {
   }
 };
 
-export const handleGithubLogin = async (e) => {
+export const handleGithubLogin = async (_) => {
   "use server";
   await signIn("github");
 };
 
-export const handleLogout = async (e) => {
+export const handleLogout = async (_) => {
   "use server";
   await signOut();
 };
