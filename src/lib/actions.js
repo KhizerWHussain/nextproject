@@ -6,7 +6,7 @@ import { signIn, signOut } from "./auth";
 import { User } from "./../models/usermodel";
 import bcrypt from "bcryptjs";
 
-export const addPost = async (formData) => {
+export const addPost = async (prevState, formData) => {
   const { title, description, slug, userId } = Object.fromEntries(formData);
 
   try {
@@ -20,6 +20,7 @@ export const addPost = async (formData) => {
 
     await newPost.save();
     revalidatePath("/blog");
+    revalidatePath("/admin");
     return {
       message: "post created successfully",
       status: 200,
@@ -34,12 +35,56 @@ export const addPost = async (formData) => {
 export const deletePost = async (formData) => {
   connectToDb();
   const { postId } = Object.fromEntries(formData);
+  console.log("post id ?", postId);
   try {
     await Post.findByIdAndDelete(postId);
     revalidatePath("/blog");
+    revalidatePath("/admin");
     return {
       status: 200,
       message: "post deleted successfully!",
+    };
+  } catch (error) {
+    console.log("error => ", error);
+    return { error };
+  }
+};
+
+export const addUser = async (prevState, formData) => {
+  const { username, email, password, image } = Object.fromEntries(formData);
+
+  try {
+    connectToDb();
+    const newUser = new User({
+      username,
+      email,
+      password,
+      image,
+    });
+
+    await newUser.save();
+    revalidatePath("/admin");
+    return {
+      message: "user created successfully",
+      status: 200,
+      data: newUser,
+    };
+  } catch (error) {
+    console.log("error => ", error);
+    return { error };
+  }
+};
+
+export const deleteUser = async (formData) => {
+  connectToDb();
+  const { id } = Object.fromEntries(formData);
+  try {
+    await Post.deleteMany({ userId: id });
+    await User.findByIdAndDelete(id);
+    revalidatePath("/admin");
+    return {
+      status: 200,
+      message: "user has been deleted",
     };
   } catch (error) {
     console.log("error => ", error);
@@ -63,7 +108,6 @@ export const register = async (prevState, formData) => {
 
   if (password !== confirmPassword) {
     return { error: "password does not match" };
-    // throw new Error('password does not match')
   }
   try {
     connectToDb();
@@ -92,6 +136,7 @@ export const login = async (prevState, formData) => {
   try {
     await signIn("credentials", { username, password });
   } catch (err) {
+    console.log("during login =?", err);
     if (err.message.includes("CredentialsSignin")) {
       return { error: "Invalid username or password" };
     }

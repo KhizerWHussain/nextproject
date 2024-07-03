@@ -19,25 +19,24 @@ export const authConfig = {
       return session;
     },
     authorized({ auth, request }) {
-      console.log("auth =>", auth);
-      console.log("request =>", request);
       const user = auth?.user;
-      const adminPanel = request?.nextUrl?.pathname.startsWith("/admin");
-      const isOnBlogPage = request?.nextUrl?.pathname.startsWith("/blog");
-      const isOnLoginPage = request?.nextUrl?.pathname.startsWith("/login");
+      const isOnAdminPanel = request.nextUrl?.pathname.startsWith("/admin");
+      const isOnBlogPage = request.nextUrl?.pathname.startsWith("/blog");
+      const isOnLoginPage = request.nextUrl?.pathname.startsWith("/login");
 
-      // only admin can reach the dashboard
-      if (adminPanel && !user?.isAdmin) {
+      // ONLY ADMIN CAN REACH THE ADMIN DASHBOARD
+      if (isOnAdminPanel && !user?.isAdmin) {
         return false;
       }
-      // only authenticated user can reach the blog page
+
+      // ONLY AUTHENTICATED USERS CAN REACH THE BLOG PAGE
       if (isOnBlogPage && !user) {
         return false;
       }
 
-      // only authenticated user can reach the login page
+      // ONLY UNAUTHENTICATED USERS CAN REACH THE LOGIN PAGE
       if (isOnLoginPage && user) {
-        return Response.redirect(new URL("/", request?.nextUrl));
+        return Response.redirect(new URL("/", request.nextUrl));
       }
 
       return true;
