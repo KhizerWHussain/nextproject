@@ -104,7 +104,7 @@ export const handleLogout = async (e) => {
 
 export const register = async (prevState, formData) => {
   const { username, email, password, confirmPassword } =
-    Object?.fromEntries(formData);
+    Object.fromEntries(formData);
 
   if (password !== confirmPassword) {
     return { error: "password does not match" };
@@ -132,7 +132,7 @@ export const register = async (prevState, formData) => {
 };
 
 export const login = async (prevState, formData) => {
-  const { username, password } = Object?.fromEntries(formData);
+  const { username, password } = Object.fromEntries(formData);
   try {
     await signIn("credentials", { username, password });
   } catch (err) {

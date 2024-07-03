@@ -1,6 +1,5 @@
 import PostCardComponent from "@/components/postcard";
 import styles from "./blog.module.css";
-// import { getPosts } from "@/lib/data";
 
 export const metadata = {
   title: "Blog Page",
@@ -29,15 +28,16 @@ const BlogPage = async () => {
   // fetch data without api
   // const { data } = await getPosts();
 
-  return data ? (
+  return (
     <div className={styles.container}>
-      {data?.map((item, i) => (
-        <div className={styles.post} key={`${i}.${item.id}`}>
-          <PostCardComponent item={item} />
-        </div>
-      ))}
+      {data &&
+        data?.map((item, i) => (
+          <div className={styles.post} key={`${i}.${item.id}`}>
+            <PostCardComponent item={item} />
+          </div>
+        ))}
     </div>
-  ) : null;
+  );
 };
 
 export default BlogPage;
